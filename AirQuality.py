@@ -49,14 +49,16 @@ if __name__ == "__main__":
 
     noise = noise.Noise()
     low, mid, high, amp = noise.get_noise_profile()
+    print("Noise: {}".format(apm))
+    print("Temeparture: {}".format(bme280.get_temperature()))
 
     db = Database('airquality', 'airquality', 'Abcd1234!')
 
     ct = datetime.datetime.now()
-    db.add_enviro(ct.timestamp(), 
-                  bme280.get_temperature(), 
-                  bme280.get_pressure(), 
-                  bme280.get_humidity(), 
-                  ltr559.get_lux(),
-                  ltr559.get_proximity(),
-                  )
+#    db.add_enviro(ct.timestamp(), 
+#                  bme280.get_temperature(), 
+#                  bme280.get_pressure(), 
+#                  bme280.get_humidity(), 
+#                  ltr559.get_lux(),
+#                  ltr559.get_proximity(),
+#                  )
