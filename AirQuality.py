@@ -10,7 +10,7 @@ class Database():
         self.cur = self.conn.cursor()
         
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
-        print("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
+        self.cur.execute("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
                          VALUES({}, {}, {}, {}, {}, {}, {} )".format(
                              time, temp, pres, hum, light, prox, noise
                          ))
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
             temp, pres, hum, light, prox, noise_amp
         ))
-        db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
+        db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise_amp)
 
         gas_data = gas.read_all()
         oxidising = gas_data.oxidising / 1000
