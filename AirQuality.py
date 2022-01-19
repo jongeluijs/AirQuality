@@ -30,14 +30,12 @@ class Database():
     def close(self):
         self.conn.close()
 
-
 if __name__ == "__main__":
 
     from bme280 import BME280
     from pms5003 import PMS5003, ReadTimeoutError as pmsReadTimeoutError, SerialTimeoutError
     from enviroplus import gas, noise
     from ltr559 import LTR559
-    from enviroplus.noise import Noise
 
     # BME280 temperature/pressure/humidity sensor
     bme280 = BME280()
@@ -47,20 +45,36 @@ if __name__ == "__main__":
 
     ltr559 = LTR559()
 
+    # get database connection
+    #db = Database('airquality.db')
+
+    temp = bme280.get_temperature()
+    pres = bme280.get_pressure()
+    hum  = bme280.get_humidity()
+    light = ltr559.get_lux()
+    prox = ltr559.get_proximity()
+
     noise = noise.Noise()
     low, mid, high, amp = noise.get_noise_profile()
-    print("Noise: {}".format(amp))
-    print("Temeparture: {}".format(bme280.get_temperature()))
-
-    db = Database('airquality.db')
-    print("Connection made.")
+    noise = amp
 
     ct = datetime.now()
-    db.add_enviro(ct.timestamp(), 
-                  bme280.get_temperature(), 
-                  bme280.get_pressure(), 
-                  bme280.get_humidity(), 
-                  ltr559.get_lux(),
-                  ltr559.get_proximity(),
-                  amp
-                  )
+
+    # Add data to database
+    print("enviro: \n
+      temp  = {temp} \n
+      pres  = {pres} \n
+      hum   = {hum} \n
+      light = {light} \n
+      prox  = {prox} \n
+      noise = {noise}"
+      )
+    #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
+
+    gas_data = gas.read_all()
+    print("gas: \n
+      CO = {gas_data.oxidising} \n 
+      NO2 = {gas_data.reducing}"
+      )
+
+    part_data = pms5003.read()
