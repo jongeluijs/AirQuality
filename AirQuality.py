@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     noise = noise.Noise()
     low, mid, high, amp = noise.get_noise_profile()
-    print("Noise: {}".format(apm))
+    print("Noise: {}".format(amp))
     print("Temeparture: {}".format(bme280.get_temperature()))
 
     db = Database('airquality', 'airquality', 'Abcd1234!')
