@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     db = Database('airquality.db')
     while True:
-        time.sleep(5.0)
+        time.sleep(60.0)
         try:
             temp = bme280.get_temperature()
             pres = bme280.get_pressure()
