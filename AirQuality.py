@@ -11,20 +11,23 @@ class Database():
         
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
         self.cur.execute("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
-                         VALUES(%s, %s, %s, %s, %s, %s, %s )" % 
-                         (time, temp, pres, hum, light, prox, noise))
+                         VALUES({}, {}, {}, {}, {}, {}, {} )".format(
+                             time, temp, pres, hum, light, prox, noise
+                         ))
         self.conn.commit()
 
     def add_gasses(self, time, oxidising, reducing, NH3):
         self.cur.execute("INSERT INTO gasses(timedate, oxidising, reducing, NH3) \
-                         VALUES(%s, %s, %s, %s )" % 
-                         (time, oxidising, reducing, NH3))
+                         VALUES({}, {}, {}, {} )".format(
+                             time, oxidising, reducing, NH3
+                         ))
         self.conn.commit()
 
     def add_pms5003(self, time, pm1, pm25, pm10):
         self.cur.execute("INSERT INTO pms5003(timedate, pm1, pm25, pm10) \
-                          VALUES(%s, %s, %s, %s)" % 
-                          (time, pm1, pm25, pm10))
+                          VALUES({}, {}, {}, {})".format(
+                              time, pm1, pm25, pm10
+                          ))
         self.conn.commit()
 
     def close(self):
