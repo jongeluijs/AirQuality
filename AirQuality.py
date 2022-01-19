@@ -59,21 +59,24 @@ if __name__ == "__main__":
         prox = ltr559.get_proximity()
 
         low, mid, high, amp = noise.get_noise_profile()
-        noi = amp
+        noise_amp = amp
 
         ct = datetime.now()
 
         # Add data to database
         print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
-            temp, pres, hum, light, prox, noi
+            temp, pres, hum, light, prox, noise_amp
         ))
         #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
         gas_data = gas.read_all()
-        CO = gas_data.oxidising / 1000
-        NO2 = gas_data.reducing /1000
+        oxidising = gas_data.oxidising / 1000
+        reducing = gas_data.reducing /1000
+        adc = gas_data.adc
         NH3 = gas_data.nh3 / 1000
-        print("gas:\n  CO={}\n  NO2={}\n. NH3={}".format(CO, NO2, NH3))
+        print("gas:\n  Oxidising={}\n  Reducing={}\n. NH3={}\n. adc={}".format(
+            oxidising, reducing, NH3, adc
+        ))
 
         part_data = pms5003.read()
         pm1 = float(part_data.pm_ug_per_m3(1.0))
