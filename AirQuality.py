@@ -9,7 +9,6 @@ class Database():
     def __init__(self, dbname, user, passwd, host='localhost'):
         url = f"postgresql://{user}:{passwd}@{host}:5432/{dbname}"
         self.engine = create_engine(url, pool_size=50, echo=False)
-        
         self.conn = scoped_session(sessionmaker(bind=self.engine))
 
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
@@ -56,8 +55,9 @@ if __name__ == "__main__":
     print("Temeparture: {}".format(bme280.get_temperature()))
 
     db = Database('airquality', 'airquality', 'Abcd1234!')
+    print("Connection made.")
 
-    ct = datetime.datetime.now()
+    ct = datetime.now()
     db.add_enviro(ct.timestamp(), 
                   bme280.get_temperature(), 
                   bme280.get_pressure(), 
