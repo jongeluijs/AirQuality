@@ -67,9 +67,12 @@ if __name__ == "__main__":
     #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
     gas_data = gas.read_all()
-    print("gas:\n  CO={}\n  NO2={}".format(gas_data.oxidising, gas_data.reducing))
+    CO = gas_data.oxidising / 1000
+    NO2 = gas_data.reducing /1000
+    print("gas:\n  CO={}\n  NO2={}".format(CO, NO2))
 
     part_data = pms5003.read()
-    print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(
-        part_data.pm_ug_per_m3(1), part_data.pm_ug_per_m3(2.5), part_data.pm_ug_per_m3(10)
-    ))
+    pm1 = float(part_data.pm_ug_per_m3(1.0))
+    pm2 = float(part_data.pm_ug_per_m3(2.5))
+    pm10 = float(part_data.pm_ug_per_m3(10.0))
+    print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
