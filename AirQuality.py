@@ -70,3 +70,6 @@ if __name__ == "__main__":
     print("gas:\n  CO={}\n  NO2={}".format(gas_data.oxidising, gas_data.reducing))
 
     part_data = pms5003.read()
+    print{"particles:\n  1={}\n. 2.5={}\n. 10={}".format(
+        part_data.pm_ug_per_m3(1), part_data.pm_ug_per_m3(2.5), part_data.pm_ug_per_m3(10)
+    )}
