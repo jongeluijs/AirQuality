@@ -62,4 +62,5 @@ if __name__ == "__main__":
                   bme280.get_humidity(), 
                   ltr559.get_lux(),
                   ltr559.get_proximity(),
+                  amp
                   )
