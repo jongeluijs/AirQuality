@@ -74,7 +74,7 @@ if __name__ == "__main__":
         reducing = gas_data.reducing /1000
         nh3 = gas_data.nh3 / 1000
         print("gas:\n  oxidising={}\n  reducing={}\n. nh3={}".format(
-            oxidising, reducing, NH3
+            oxidising, reducing, nh3
         ))
         #db.add_gasses(ct.timestamp(), oxidising, reducing, nh3)
 
