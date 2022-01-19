@@ -45,6 +45,8 @@ if __name__ == "__main__":
 
     ltr559 = LTR559()
 
+    noise = noise.Noise()
+
     while True:
         time.sleep(1.0)
         # get database connection
@@ -56,7 +58,6 @@ if __name__ == "__main__":
         light = ltr559.get_lux()
         prox = ltr559.get_proximity()
 
-        noise = noise.Noise()
         low, mid, high, amp = noise.get_noise_profile()
         noise = amp
 
