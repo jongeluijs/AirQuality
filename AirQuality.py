@@ -67,7 +67,7 @@ if __name__ == "__main__":
         print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
             temp, pres, hum, light, prox, noise_amp
         ))
-        #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
+        db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
         gas_data = gas.read_all()
         oxidising = gas_data.oxidising / 1000
@@ -76,11 +76,11 @@ if __name__ == "__main__":
         print("gas:\n  oxidising={}\n  reducing={}\n. nh3={}".format(
             oxidising, reducing, nh3
         ))
-        #db.add_gasses(ct.timestamp(), oxidising, reducing, nh3)
+        db.add_gasses(ct.timestamp(), oxidising, reducing, nh3)
 
         part_data = pms5003.read()
         pm1 = float(part_data.pm_ug_per_m3(1.0))
         pm2 = float(part_data.pm_ug_per_m3(2.5))
         pm10 = float(part_data.pm_ug_per_m3(10.0))
         print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
-        #db.add_pms5003(ct.timestamp(), pm1, pm2, pm10)
+        db.add_pms5003(ct.timestamp(), pm1, pm2, pm10)
