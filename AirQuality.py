@@ -11,19 +11,19 @@ class Database():
         
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
         self.cur.execute("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
-                         VALUES('%s', %s, %s, %s, %s, %s, %s )" % 
+                         VALUES(%s, %s, %s, %s, %s, %s, %s )" % 
                          (time, temp, pres, hum, light, prox, noise))
         self.conn.commit()
 
-    def add_gasses(self, time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10):
-        self.cur.execute("INSERT INTO gasses(timedate, CO2, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10) \
-                         VALUES('%s', %s, %s, %s, %s, %s, %s, %s, %s )" % 
-                         (time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10))
+    def add_gasses(self, time, oxidising, reducing, NH3):
+        self.cur.execute("INSERT INTO gasses(timedate, oxidising, reducing, NH3) \
+                         VALUES(%s, %s, %s, %s )" % 
+                         (time, oxidising, reducing, NH3))
         self.conn.commit()
 
     def add_pms5003(self, time, pm1, pm25, pm10):
         self.cur.execute("INSERT INTO pms5003(timedate, pm1, pm25, pm10) \
-                          VALUES('%s', %s, %s, %s)" % 
+                          VALUES(%s, %s, %s, %s)" % 
                           (time, pm1, pm25, pm10))
         self.conn.commit()
 
@@ -72,11 +72,11 @@ if __name__ == "__main__":
         gas_data = gas.read_all()
         oxidising = gas_data.oxidising / 1000
         reducing = gas_data.reducing /1000
-        adc = gas_data.adc
-        NH3 = gas_data.nh3 / 1000
-        print("gas:\n  Oxidising={}\n  Reducing={}\n. NH3={}\n. adc={}".format(
-            oxidising, reducing, NH3, adc
+        nh3 = gas_data.nh3 / 1000
+        print("gas:\n  oxidising={}\n  reducing={}\n. nh3={}".format(
+            oxidising, reducing, NH3
         ))
+        db.add_gasses(oxidising, reducing, nh3)
 
         part_data = pms5003.read()
         pm1 = float(part_data.pm_ug_per_m3(1.0))

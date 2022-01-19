@@ -7,14 +7,9 @@ CREATE TABLE IF NOT EXISTS environ ( timedate timestamp,
                                      noise NUMERIC);
 
 CREATE TABLE IF NOT EXISTS gasses ( timedate timestamp,
-                                    CO NUMERIC,
-                                    NO2 NUMERIC,
-                                    C2H5OH NUMERIC,
-                                    H2 NUMERIC, 
-                                    NH3 NUMERIC, 
-                                    CO4 NUMERIC, 
-                                    C3H8 NUMERIC, 
-                                    C4H10 NUMERIC);
+                                    oxidising NUMERIC,
+                                    reducing NUMERIC,
+                                    NH3 NUMERIC);
 
 CREATE TABLE IF NOT EXISTS pms5003 ( timedate timestamp, 
                                      pm1 NUMERIC, 
