@@ -48,7 +48,7 @@ if __name__ == "__main__":
     noise = noise.Noise()
 
     while True:
-        time.sleep(1.0)
+        time.sleep(5.0)
         # get database connection
         #db = Database('airquality.db')
 
@@ -59,13 +59,13 @@ if __name__ == "__main__":
         prox = ltr559.get_proximity()
 
         low, mid, high, amp = noise.get_noise_profile()
-        noise = amp
+        noi = amp
 
         ct = datetime.now()
 
         # Add data to database
         print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
-            temp, pres, hum, light, prox, noise
+            temp, pres, hum, light, prox, noi
         ))
         #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
