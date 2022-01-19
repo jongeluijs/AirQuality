@@ -45,35 +45,37 @@ if __name__ == "__main__":
 
     ltr559 = LTR559()
 
-    time.sleep(1.0)
-    # get database connection
-    #db = Database('airquality.db')
+    while True:
+        time.sleep(1.0)
+        # get database connection
+        #db = Database('airquality.db')
 
-    temp = bme280.get_temperature()
-    pres = bme280.get_pressure()
-    hum  = bme280.get_humidity()
-    light = ltr559.get_lux()
-    prox = ltr559.get_proximity()
+        temp = bme280.get_temperature()
+        pres = bme280.get_pressure()
+        hum  = bme280.get_humidity()
+        light = ltr559.get_lux()
+        prox = ltr559.get_proximity()
 
-    noise = noise.Noise()
-    low, mid, high, amp = noise.get_noise_profile()
-    noise = amp
+        noise = noise.Noise()
+        low, mid, high, amp = noise.get_noise_profile()
+        noise = amp
 
-    ct = datetime.now()
+        ct = datetime.now()
 
-    # Add data to database
-    print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
-        temp, pres, hum, light, prox, noise
-    ))
-    #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
+        # Add data to database
+        print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
+            temp, pres, hum, light, prox, noise
+        ))
+        #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
-    gas_data = gas.read_all()
-    CO = gas_data.oxidising / 1000
-    NO2 = gas_data.reducing /1000
-    print("gas:\n  CO={}\n  NO2={}".format(CO, NO2))
+        gas_data = gas.read_all()
+        CO = gas_data.oxidising / 1000
+        NO2 = gas_data.reducing /1000
+        NH3 = gas_data.nh3 / 1000
+        print("gas:\n  CO={}\n  NO2={}\n. NH3={}".format(CO, NO2, NH3))
 
-    part_data = pms5003.read()
-    pm1 = float(part_data.pm_ug_per_m3(1.0))
-    pm2 = float(part_data.pm_ug_per_m3(2.5))
-    pm10 = float(part_data.pm_ug_per_m3(10.0))
-    print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
+        part_data = pms5003.read()
+        pm1 = float(part_data.pm_ug_per_m3(1.0))
+        pm2 = float(part_data.pm_ug_per_m3(2.5))
+        pm10 = float(part_data.pm_ug_per_m3(10.0))
+        print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
