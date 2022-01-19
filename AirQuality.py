@@ -1,3 +1,4 @@
+import sqlite3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -6,31 +7,30 @@ from datetime import datetime
 #################### Helper classes
 
 class Database():
-    def __init__(self, dbname, user, passwd, host='localhost'):
-        url = f"postgresql://{user}:{passwd}@{host}:5432/{dbname}"
-        self.engine = create_engine(url, pool_size=50, echo=False)
-        self.conn = scoped_session(sessionmaker(bind=self.engine))
-
+    def __init__(self, db_file):
+        self.conn = sqlite3.connect(db_file)
+        self.cur = self.conn.cursor()
+        
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
-        self.conn.execute("INSERT INTO environ(timestamp, temperature, pressure, humidity, light, proximity, noise) \
-                          VALUES('%s', %s, %s, %s, %s, %s, %s )" % 
-                          (time, temp, pres, hum, light, prox, noise))
-        self.conn.commit()
+        self.cur.execute("INSERT INTO environ(timestamp, temperature, pressure, humidity, light, proximity, noise) \
+                         VALUES('%s', %s, %s, %s, %s, %s, %s )" % 
+                         (time, temp, pres, hum, light, prox, noise))
+        self.cur.commit()
 
     def add_gasses(self, time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10):
-        self.conn.execute("INSERT INTO gasses(timestamp, CO2, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10) \
-                          VALUES('%s', %s, %s, %s, %s, %s, %s, %s, %s )" % 
-                          (time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10))
-        self.conn.commit()
+        self.cur.execute("INSERT INTO gasses(timestamp, CO2, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10) \
+                         VALUES('%s', %s, %s, %s, %s, %s, %s, %s, %s )" % 
+                         (time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10))
+        self.cur.commit()
 
     def add_pms5003(self, time, pm1, pm25, pm10):
-        self.conn.execute("INSERT INTO pms5003(timestamp, pm1, pm25, pm10) \
-                           VALUES('%s', %s, %s, %s)" % 
-                           (time, pm1, pm25, pm10))
-        self.conn.commit()
+        self.cur.execute("INSERT INTO pms5003(timestamp, pm1, pm25, pm10) \
+                          VALUES('%s', %s, %s, %s)" % 
+                          (time, pm1, pm25, pm10))
+        self.cur.commit()
 
     def close(self):
-        self.conn.close()
+        self.cur.close()
 
 
 if __name__ == "__main__":
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     print("Noise: {}".format(amp))
     print("Temeparture: {}".format(bme280.get_temperature()))
 
-    db = Database('airquality', 'airquality', 'Abcd1234!')
+    db = Database('airquality.db')
     print("Connection made.")
 
     ct = datetime.now()
