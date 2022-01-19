@@ -13,22 +13,22 @@ class Database():
         self.cur.execute("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
                          VALUES('%s', %s, %s, %s, %s, %s, %s )" % 
                          (time, temp, pres, hum, light, prox, noise))
-        self.cur.commit()
+        self.conn.commit()
 
     def add_gasses(self, time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10):
         self.cur.execute("INSERT INTO gasses(timedate, CO2, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10) \
                          VALUES('%s', %s, %s, %s, %s, %s, %s, %s, %s )" % 
                          (time, CO, NO2, C2H5OH, H2, NH3, CO4, C3H8, C4H10))
-        self.cur.commit()
+        self.conn.commit()
 
     def add_pms5003(self, time, pm1, pm25, pm10):
         self.cur.execute("INSERT INTO pms5003(timedate, pm1, pm25, pm10) \
                           VALUES('%s', %s, %s, %s)" % 
                           (time, pm1, pm25, pm10))
-        self.cur.commit()
+        self.conn.commit()
 
     def close(self):
-        self.cur.close()
+        self.conn.close()
 
 
 if __name__ == "__main__":
