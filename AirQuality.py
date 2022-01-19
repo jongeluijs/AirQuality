@@ -47,6 +47,7 @@ if __name__ == "__main__":
 
     noise = noise.Noise()
 
+    db = Database('airquality.db')
     while True:
         time.sleep(5.0)
         # get database connection
