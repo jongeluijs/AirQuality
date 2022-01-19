@@ -1,6 +1,6 @@
-import sqlite3
-
+import time
 from datetime import datetime
+import sqlite3
 
 #################### Helper classes
 
@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     ltr559 = LTR559()
 
+    time.sleep(1.0)
     # get database connection
     #db = Database('airquality.db')
 
