@@ -10,7 +10,7 @@ class Database():
         self.cur = self.conn.cursor()
         
     def add_enviro(self, time, temp, pres, hum, light, prox, noise):
-        self.cur.execute("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
+        print("INSERT INTO environ(timedate, temperature, pressure, humidity, light, proximity, noise) \
                          VALUES({}, {}, {}, {}, {}, {}, {} )".format(
                              time, temp, pres, hum, light, prox, noise
                          ))
