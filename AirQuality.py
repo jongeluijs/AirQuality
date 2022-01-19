@@ -61,20 +61,12 @@ if __name__ == "__main__":
     ct = datetime.now()
 
     # Add data to database
-    print("enviro: \n \
-      temp  = {temp} \n \
-      pres  = {pres} \n \
-      hum   = {hum} \n \
-      light = {light} \n \
-      prox  = {prox} \n \
-      noise = {noise}"
-      )
+    print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
+        temp, pres, hum, light, prox, noise
+    ))
     #db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise)
 
     gas_data = gas.read_all()
-    print("gas: \n \
-      CO = {gas_data.oxidising} \n \
-      NO2 = {gas_data.reducing}"
-      )
+    print("gas:\n  CO={}\n  NO2={}".format(gas_data.oxidising, gas_data.reducing))
 
     part_data = pms5003.read()
