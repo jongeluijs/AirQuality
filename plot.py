@@ -9,7 +9,7 @@ import time
 import sqlite3
 from bokeh.plotting import figure, show, save, output_file, reset_output
 from bokeh.layouts import column, row
-from bokeh.models import Div, Title, Span
+from bokeh.models import Div, Title, Span, Range1d
 
 
 #################### Helper classes
@@ -58,11 +58,11 @@ p1.ygrid.grid_line_alpha=0.5
 p1.xaxis.axis_label = 'Time'
 p1.yaxis.axis_label = 'micro-gram / m3'
 p1.line(pms5003_df.x_axis, pms5003_df.pm1, color='black')
-p1.circle(pms5003_df.x_axis, pms5003_df.pm1, color='black', size=2)
+p1.circle(pms5003_df.x_axis, pms5003_df.pm1, legend_label='PM 1', color='black', size=2)
 p1.line(pms5003_df.x_axis, pms5003_df.pm25, color='red')
-p1.circle(pms5003_df.x_axis, pms5003_df.pm25, color='red', size=2)
+p1.circle(pms5003_df.x_axis, pms5003_df.pm25, legend_label='PM 2.5', color='red', size=2)
 p1.line(pms5003_df.x_axis, pms5003_df.pm10, color='green')
-p1.circle(pms5003_df.x_axis, pms5003_df.pm10, color='green', size=2)
+p1.circle(pms5003_df.x_axis, pms5003_df.pm10, legend_label='PM 10', color='green', size=2)
 
 # Create the gas figure
 gasses_df = db.get_gasses(start_ts, end_ts)
@@ -74,14 +74,14 @@ p2.xgrid.grid_line_color=None
 p2.ygrid.grid_line_alpha=0.5
 p2.xaxis.axis_label = 'Time'
 p2.yaxis.axis_label = 'Concentratie'
+p2.y_range = Range1d(0, 100)
 p2.line(gasses_df.x_axis, gasses_df.oxidising, color='black')
-p2.circle(gasses_df.x_axis, gasses_df.oxidising, color='black', size=2)
+p2.circle(gasses_df.x_axis, gasses_df.oxidising, legend_label='Oxidising', color='black', size=2)
 p2.line(gasses_df.x_axis, gasses_df.reducing, color='red')
-p2.circle(gasses_df.x_axis, gasses_df.reducing, color='red', size=2)
+p2.circle(gasses_df.x_axis, gasses_df.reducing, legend_label='Reducing', color='red', size=2)
 p2.line(gasses_df.x_axis, gasses_df.NH3, color='green')
-p2.circle(gasses_df.x_axis, gasses_df.NH3, color='green', size=2)
+p2.circle(gasses_df.x_axis, gasses_df.NH3, legend_label='NH3', color='green', size=2)
 
-# Create the gas figure
 enviro_df = db.get_enviro(start_ts, end_ts)
 enviro_df['x_axis'] = [datetime.datetime.fromtimestamp(int(x)) for x in enviro_df.timedate]
 temp_title = 'Temperatuur Vochtigheid Geluid'
@@ -92,24 +92,32 @@ p3.ygrid.grid_line_alpha=0.5
 p3.xaxis.axis_label = 'Time'
 p3.yaxis.axis_label = 'Celsius % Decibel'
 p3.line(enviro_df.x_axis, enviro_df.temperature, color='black')
-p3.circle(enviro_df.x_axis, enviro_df.temperature, color='black', size=2)
+p3.circle(enviro_df.x_axis, enviro_df.temperature, legend_label='temp', color='black', size=2)
 p3.line(enviro_df.x_axis, enviro_df.humidity, color='red')
-p3.circle(enviro_df.x_axis, enviro_df.humidity, color='red', size=2)
+p3.circle(enviro_df.x_axis, enviro_df.humidity, legend_label='vocht', color='red', size=2)
 p3.line(enviro_df.x_axis, enviro_df.noise, color='green')
-p3.circle(enviro_df.x_axis, enviro_df.noise, color='green', size=2)
+p3.circle(enviro_df.x_axis, enviro_df.noise, legend_label='geluid', color='green', size=2)
 
-temp_title = 'Licht Luchtdruk'
+temp_title = 'Licht'
 p4 = figure(tools=TOOLS, x_axis_type="datetime", title=temp_title, plot_height=350, plot_width=1000)
 p4.title.align = 'center'
 p4.xgrid.grid_line_color=None
 p4.ygrid.grid_line_alpha=0.5
 p4.xaxis.axis_label = 'Time'
-p4.yaxis.axis_label = 'Lux % mBar'
+p4.yaxis.axis_label = 'Lux'
 p4.line(enviro_df.x_axis, enviro_df.light, color='black')
 p4.circle(enviro_df.x_axis, enviro_df.light, color='black', size=2)
-p4.line(enviro_df.x_axis, enviro_df.pressure, color='red')
-p4.circle(enviro_df.x_axis, enviro_df.pressure, color='red', size=2)
 
+temp_title = 'Luchtdruk'
+p5 = figure(tools=TOOLS, x_axis_type="datetime", title=temp_title, plot_height=350, plot_width=1000)
+p5.title.align = 'center'
+p5.xgrid.grid_line_color=None
+p5.ygrid.grid_line_alpha=0.5
+p5.xaxis.axis_label = 'Time'
+p5.yaxis.axis_label = 'mBar'
+p5.y_range = Range1d(955, 1050)
+p5.line(enviro_df.x_axis, enviro_df.pressure, color='black')
+p5.circle(enviro_df.x_axis, enviro_df.pressure, color='black', size=2)
 
 outfile = "airquality-{}.html".format(yesterday.strftime('%Y%m%d'))
 output_file(outfile, title='Airquality: {}'.format(yesterday.strftime('%Y%m%d')))
@@ -121,5 +129,6 @@ hrule1 = Div(text='<hr>', width=1000)
 hrule2 = Div(text='<hr>', width=1000)
 hrule3 = Div(text='<hr>', width=1000)
 hrule4 = Div(text='<hr>', width=1000)
+hrule5 = Div(text='<hr>', width=1000)
 
-show(column(title, hrule1, p1, hrule2, p2, hrule3, p3, hrule4, p4))
+show(column(title, hrule1, p1, hrule2, p2, hrule3, p3, hrule4, p4, hrule5, p5))
