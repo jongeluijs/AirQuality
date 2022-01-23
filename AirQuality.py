@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from subprocess import PIPE, Popen
 import sqlite3
 
 #################### Helper classes
@@ -33,6 +34,12 @@ class Database():
     def close(self):
         self.conn.close()
 
+# Get the temperature of the CPU for compensation
+def get_cpu_temperature():
+    process = Popen(['vcgencmd', 'measure_temp'], stdout=PIPE, universal_newlines=True)
+    output, _error = process.communicate()
+    return float(output[output.index('=') + 1:output.rindex("'")])
+
 if __name__ == "__main__":
 
     from bme280 import BME280
@@ -51,11 +58,13 @@ if __name__ == "__main__":
     noise = noise.Noise()
 
     empty_runs = 1   # Give sensors time to get stable values
+    factor = 5.0    # Factor to compensate for cpu-temperature
     db = Database('airquality.db')
     while True:
         time.sleep(60.0)
         try:
-            temp = bme280.get_temperature()
+            raw_temp = bme280.get_temperature()
+            temp = raw_temp - ((get_cpu_temperature() - raw_temp) / factor)
             pres = bme280.get_pressure()
             hum  = bme280.get_humidity()
             light = ltr559.get_lux()
