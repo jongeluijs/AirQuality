@@ -64,7 +64,9 @@ if __name__ == "__main__":
         time.sleep(60.0)
         try:
             raw_temp = bme280.get_temperature()
-            temp = raw_temp - ((get_cpu_temperature() - raw_temp) / factor)
+            cpu_temp = get_cpu_temperature()
+            temp = raw_temp - ((cpu_temp - raw_temp) / factor)
+            print("raw={} cpu={} temp={}".format(raw_temp, cpu_temp, temp))
             pres = bme280.get_pressure()
             hum  = bme280.get_humidity()
             light = ltr559.get_lux()
