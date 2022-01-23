@@ -50,45 +50,47 @@ if __name__ == "__main__":
 
     noise = noise.Noise()
 
-    empty_runs = 1
+    empty_runs = 1   # Give sensors time to get stable values
     db = Database('airquality.db')
     while True:
         time.sleep(60.0)
-        if empty_runs > 5:
-            try:
-                temp = bme280.get_temperature()
-                pres = bme280.get_pressure()
-                hum  = bme280.get_humidity()
-                light = ltr559.get_lux()
-                prox = ltr559.get_proximity()
+        try:
+            temp = bme280.get_temperature()
+            pres = bme280.get_pressure()
+            hum  = bme280.get_humidity()
+            light = ltr559.get_lux()
+            prox = ltr559.get_proximity()
 
-                low, mid, high, amp = noise.get_noise_profile()
-                noise_amp = amp
+            low, mid, high, amp = noise.get_noise_profile()
+            noise_amp = amp
 
-                ct = datetime.now()
+            ct = datetime.now()
 
-                # Add data to database
-                print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
-                    temp, pres, hum, light, prox, noise_amp
-                ))
+            # Add data to database
+            print("enviro:\n  temp={}\n  pres={}\n  hum={}\n  light={}\n  prox={}\n  noise={}".format(
+                temp, pres, hum, light, prox, noise_amp
+            ))
+
+            gas_data = gas.read_all()
+            oxidising = gas_data.oxidising / 1000
+            reducing = gas_data.reducing /1000
+            nh3 = gas_data.nh3 / 1000
+            print("gas:\n  oxidising={}\n  reducing={}\n. nh3={}".format(
+                oxidising, reducing, nh3
+            ))
+
+            part_data = pms5003.read()
+            pm1 = float(part_data.pm_ug_per_m3(1.0))
+            pm2 = float(part_data.pm_ug_per_m3(2.5))
+            pm10 = float(part_data.pm_ug_per_m3(10.0))
+            print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
+
+            if empty_runs > 5:
                 db.add_enviro(ct.timestamp(), temp, pres, hum, light, prox, noise_amp)
-
-                gas_data = gas.read_all()
-                oxidising = gas_data.oxidising / 1000
-                reducing = gas_data.reducing /1000
-                nh3 = gas_data.nh3 / 1000
-                print("gas:\n  oxidising={}\n  reducing={}\n. nh3={}".format(
-                    oxidising, reducing, nh3
-                ))
                 db.add_gasses(ct.timestamp(), oxidising, reducing, nh3)
-
-                part_data = pms5003.read()
-                pm1 = float(part_data.pm_ug_per_m3(1.0))
-                pm2 = float(part_data.pm_ug_per_m3(2.5))
-                pm10 = float(part_data.pm_ug_per_m3(10.0))
-                print("particles:\n  1={}\n. 2.5={}\n. 10={}".format(pm1, pm2, pm10))
                 db.add_pms5003(ct.timestamp(), pm1, pm2, pm10)
-            except:
-                continue
-        else:
-            empty_runs = empty_runs + 1
+            else:
+                empty_runs = empty_runs + 1
+
+        except:
+            continue
